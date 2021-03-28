@@ -11,7 +11,7 @@ resource "aws_vpc" "vpc" {
 
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id     = "aws_vpc.vpc.id"
-  depends_on = "aws_vpc.vpc"
+  depends_on = ["aws_vpc.vpc"]
 }
 
 data "aws_availability_zones" "all" {}
