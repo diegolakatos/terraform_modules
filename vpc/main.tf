@@ -10,21 +10,21 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id     = "${aws_vpc.vpc.id}"
-  depends_on = ["aws_vpc.vpc"]
+  vpc_id     = "aws_vpc.vpc.id"
+  depends_on = "aws_vpc.vpc"
 }
 
 data "aws_availability_zones" "all" {}
 
 resource "aws_subnet" "private_subnets" {
   map_public_ip_on_launch = false
-  vpc_id                  = "${aws_vpc.vpc.id}"
-  count                   = "${var.subnet_count}"
-  cidr_block              = "${cidrsubnet(var.cidr_block, var.cidr_network_bits, count.index)}"
-  availability_zone       = "${element(data.aws_availability_zones.all.names, count.index)}"
+  vpc_id                  = "aws_vpc.vpc.id"
+  count                   = "var.subnet_count"
+  cidr_block              = "cidrsubnet(var.cidr_block, var.cidr_network_bits, count.index)"
+  availability_zone       = "{element(data.aws_availability_zones.all.names, count.index)"
 
   tags = {
-    Name = "private-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
+    Name = "private-element(data.aws_availability_zones.all.names, count.index)-subnet"
   }
 }
 
