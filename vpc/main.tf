@@ -23,7 +23,7 @@ resource "aws_subnet" "private_subnets" {
   cidr_block              = "${cidrsubnet(var.cidr_block, var.cidr_network_bits, count.index)}"
   availability_zone       = "${element(data.aws_availability_zones.all.names, count.index)}"
 
-  tags {
+  tags = {
     Name = "private-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
   }
 }
@@ -35,7 +35,7 @@ resource "aws_subnet" "public_subnets" {
   cidr_block              = "${cidrsubnet(var.cidr_block, var.cidr_network_bits, (count.index + length(data.aws_availability_zones.all.names)))}"
   availability_zone       = "${element(data.aws_availability_zones.all.names, count.index)}"
 
-  tags {
+  tags = {
     Name = "public-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
   }
 }
@@ -59,7 +59,7 @@ resource "aws_route_table" "public" {
     gateway_id = "${aws_internet_gateway.internet_gateway.id}"
   }
 
-  tags {
+  tags = {
     Name = "route_table_public"
   }
 }
@@ -72,7 +72,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = "${aws_nat_gateway.nat_gateway.id}"
   }
 
-  tags {
+  tags = {
     Name = "route_table_private"
   }
 }
