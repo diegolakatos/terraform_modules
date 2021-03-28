@@ -20,8 +20,8 @@ resource "aws_subnet" "private_subnets" {
   map_public_ip_on_launch = false
   vpc_id                  = "aws_vpc.vpc.id"
   count                   = var.subnet_count
-  cidr_block              = "cidrsubnet(var.cidr_block, var.cidr_network_bits, count.index)"
-  availability_zone       = "{element(data.aws_availability_zones.all.names, count.index)"
+  cidr_block              = cidrsubnet(var.cidr_block, var.cidr_network_bits, count.index)
+  availability_zone       = {element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
     Name = "private-element(data.aws_availability_zones.all.names, count.index)-subnet"
