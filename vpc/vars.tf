@@ -1,8 +1,8 @@
-variable cidr_block {
+variable "cidr_block" {
   default = "10.0.0.0/16"
 }
 
-variable vpc_name {
+variable "vpc_name" {
   default = "prod-vpc"
 }
 
