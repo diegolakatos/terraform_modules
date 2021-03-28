@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id     = aws_vpc.vpc.id
+  vpc_id     = "aws_vpc.vpc.id"
 }
 
 data "aws_availability_zones" "all" {}
@@ -23,7 +23,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone       = element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
-    Name = "private-element(data.aws_availability_zones.all.names, count.index)-subnet"
+    Name = "private-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "public_subnets" {
   availability_zone       = element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
-    Name = "public-element(${data.aws_availability_zones.all.names}, ${count.index})}-subnet"
+    Name = "public-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
   }
 }
 
