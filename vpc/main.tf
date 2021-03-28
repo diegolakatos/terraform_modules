@@ -46,17 +46,17 @@ resource "aws_eip" "nat_gateway_eip" {
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
-  allocation_id = "${aws_eip.nat_gateway_eip.id}"
-  subnet_id     = "${aws_subnet.public_subnets.*.id[0]}"
+  allocation_id = aws_eip.nat_gateway_eip.id
+  subnet_id     = aws_subnet.public_subnets.*.id[0]
   depends_on    = [aws_internet_gateway.internet_gateway, aws_subnet.public_subnets]
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = "${aws_vpc.vpc.id}"
+  vpc_id = "aws_vpc.vpc.id"
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.internet_gateway.id}"
+    gateway_id = aws_internet_gateway.internet_gateway.id
   }
 
   tags = {
@@ -65,11 +65,11 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table" "private" {
-  vpc_id = "${aws_vpc.vpc.id}"
+  vpc_id = aws_vpc.vpc.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = "${aws_nat_gateway.nat_gateway.id}"
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
 
   tags = {
@@ -78,28 +78,28 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "public_assoc" {
-  count          = "${length(data.aws_availability_zones.all.names)}"
-  subnet_id      = "${element(aws_subnet.public_subnets.*.id, count.index)}"
-  route_table_id = "${aws_route_table.public.id}"
+  count          = length(data.aws_availability_zones.all.names)
+  subnet_id      = element(aws_subnet.public_subnets.*.id, count.index)
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private_assoc" {
-  count          = "${length(data.aws_availability_zones.all.names)}"
-  subnet_id      = "${element(aws_subnet.private_subnets.*.id,count.index)}"
-  route_table_id = "${aws_route_table.private.id}"
+  count          = length(data.aws_availability_zones.all.names)
+  subnet_id      = element(aws_subnet.private_subnets.*.id,count.index)
+  route_table_id = aws_route_table.private.id
 }
 
 resource "aws_route53_zone" "internal_zone" {
   name = "${var.zone_name}.internal"
 
   vpc {
-    vpc_id = "${aws_vpc.vpc.id}"
+    vpc_id = aws_vpc.vpc.id
   }
 }
 
 resource "aws_security_group" "vpc_security_group" {
-  name   = "aws-${var.vpc_name}-vpc-sg"
-  vpc_id = "${aws_vpc.vpc.id}"
+  name   = aws-var.vpc_name-vpc-sg
+  vpc_id = aws_vpc.vpc.id
 }
 
 resource "aws_security_group_rule" "allow_ssh_internal" {
@@ -107,9 +107,9 @@ resource "aws_security_group_rule" "allow_ssh_internal" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  cidr_blocks = ["${var.cidr_block}"]
+  cidr_blocks = [var.cidr_block]
 
-  security_group_id = "${aws_security_group.vpc_security_group.id}"
+  security_group_id = aws_security_group.vpc_security_group.id
 }
 
 resource "aws_security_group_rule" "egress_allow_all" {
@@ -119,5 +119,5 @@ resource "aws_security_group_rule" "egress_allow_all" {
   protocol    = "all"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = "${aws_security_group.vpc_security_group.id}"
+  security_group_id = aws_security_group.vpc_security_group.id
 }
