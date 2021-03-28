@@ -98,7 +98,7 @@ resource "aws_route53_zone" "internal_zone" {
 }
 
 resource "aws_security_group" "vpc_security_group" {
-  name   = "var.vpc_name"-vpc-sg
+  name   = ${var.vpc_name}-vpc-sg
   vpc_id = aws_vpc.vpc.id
 }
 
