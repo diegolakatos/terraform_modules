@@ -18,10 +18,10 @@ data "aws_availability_zones" "all" {}
 
 resource "aws_subnet" "private_subnets" {
   map_public_ip_on_launch = false
-  vpc_id                  = "aws_vpc.vpc.id"
+  vpc_id                  = aws_vpc.vpc.id
   count                   = var.subnet_count
   cidr_block              = cidrsubnet(var.cidr_block, var.cidr_network_bits, count.index)
-  availability_zone       = {element(data.aws_availability_zones.all.names, count.index)
+  availability_zone       = element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
     Name = "private-element(data.aws_availability_zones.all.names, count.index)-subnet"
@@ -30,25 +30,25 @@ resource "aws_subnet" "private_subnets" {
 
 resource "aws_subnet" "public_subnets" {
   map_public_ip_on_launch = true
-  vpc_id                  = "${aws_vpc.vpc.id}"
-  count                   = "${var.subnet_count}"
-  cidr_block              = "${cidrsubnet(var.cidr_block, var.cidr_network_bits, (count.index + length(data.aws_availability_zones.all.names)))}"
-  availability_zone       = "${element(data.aws_availability_zones.all.names, count.index)}"
+  vpc_id                  = aws_vpc.vpc.id
+  count                   = var.subnet_count
+  cidr_block              = cidrsubnet(var.cidr_block, var.cidr_network_bits, (count.index + length(data.aws_availability_zones.all.names)))
+  availability_zone       = element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
-    Name = "public-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
+    Name = "public-element(data.aws_availability_zones.all.names, count.index)}-subnet"
   }
 }
 
 resource "aws_eip" "nat_gateway_eip" {
   vpc        = true
-  depends_on = ["aws_internet_gateway.internet_gateway"]
+  depends_on = [aws_internet_gateway.internet_gateway]
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = "${aws_eip.nat_gateway_eip.id}"
   subnet_id     = "${aws_subnet.public_subnets.*.id[0]}"
-  depends_on    = ["aws_internet_gateway.internet_gateway", "aws_subnet.public_subnets"]
+  depends_on    = [aws_internet_gateway.internet_gateway", "aws_subnet.public_subnets]
 }
 
 resource "aws_route_table" "public" {
