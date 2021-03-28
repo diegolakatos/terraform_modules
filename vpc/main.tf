@@ -23,7 +23,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone       = element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
-    Name = "private-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
+    Name = "private-element(${data.aws_availability_zones.all.names}, ${count.index})-subnet"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "public_subnets" {
   availability_zone       = element(data.aws_availability_zones.all.names, count.index)
 
   tags = {
-    Name = "public-${element(data.aws_availability_zones.all.names, count.index)}-subnet"
+    Name = "public-element(${data.aws_availability_zones.all.names}, ${count.index})-subnet"
   }
 }
 
