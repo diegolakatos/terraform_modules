@@ -90,7 +90,7 @@ resource "aws_route_table_association" "private_assoc" {
 }
 
 resource "aws_route53_zone" "internal_zone" {
-  name = [var.zone_name.internal]
+  name = "${var.zone_name}.internal"
 
   vpc {
     vpc_id = aws_vpc.vpc.id
