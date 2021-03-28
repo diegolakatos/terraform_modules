@@ -8,10 +8,12 @@ variable vpc_name {
 
 variable "cidr_network_bits" {
   default = "4"
+  type = "number"
 }
 
 variable "subnet_count" {
   default = "2"
+  type = "number"
 }
 
 variable "zone_name" {
